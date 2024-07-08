@@ -5,7 +5,6 @@ const Insights = ({ pageId, accessToken }) => {
   const [insights, setInsights] = useState({});
   const [since, setSince] = useState("2023-01-01");
   const [until, setUntil] = useState("2023-12-31");
-  console.log(pageId);
 
   useEffect(() => {
     const fetchInsights = async () => {
