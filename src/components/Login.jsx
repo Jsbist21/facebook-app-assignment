@@ -1,38 +1,41 @@
-// Login.jsx
-
-import React from "react";
-import { FacebookProvider, LoginButton } from "react-facebook";
-import loadFbSdk from "../util/loadFbSdk"; // Import your SDK loader
-
+import React, { useState, useEffect } from "react";
+import loadFbSdk from "../util/loadFbSdk";
 const Login = ({ responseFacebook }) => {
-  const handleResponse = (data) => {
-    responseFacebook(data.profile);
-  };
+  const [sdkLoaded, setSdkLoaded] = useState(false);
 
-  const handleError = (error) => {
-    console.log(error);
-  };
-
-  // Ensure SDK is loaded before rendering FacebookProvider
-  loadFbSdk()
-    .then(() => {
-      console.log("Facebook SDK loaded successfully.");
-    })
-    .catch((error) => {
-      console.error("Failed to load Facebook SDK:", error);
+  useEffect(() => {
+    loadFbSdk().then(() => {
+      setSdkLoaded(true);
     });
+  }, []);
 
-  return (
-    <FacebookProvider appId={import.meta.env.VITE_FACEBOOK_APP_ID}>
-      <LoginButton
-        scope="email"
-        onCompleted={handleResponse}
-        onError={handleError}
-      >
-        <span>Login via Facebook</span>
-      </LoginButton>
-    </FacebookProvider>
-  );
+  const handleLogin = () => {
+    if (!sdkLoaded) {
+      console.error("Facebook SDK not loaded yet.");
+      return;
+    }
+    window.FB.login(
+      function (response) {
+        if (response.authResponse) {
+          window.FB.api(
+            "/me",
+            { fields: "name, email, picture" },
+            function (profileResponse) {
+              responseFacebook({
+                ...response.authResponse,
+                profile: profileResponse,
+              });
+            }
+          );
+        } else {
+          console.log("User cancelled login or did not fully authorize.");
+        }
+      },
+      { scope: "email,public_profile,pages_show_list" }
+    );
+  };
+
+  return <button onClick={handleLogin}>Login via Facebook</button>;
 };
 
 export default Login;

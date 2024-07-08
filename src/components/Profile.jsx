@@ -1,10 +1,32 @@
-import React from "react";
+import React, { useEffect, useState } from "react";
+import fetchUserData from "../util/FetchUserData";
 
-const Profile = ({ user }) => {
+const Profile = ({ accessToken }) => {
+  const [userData, setUserData] = useState(null);
+
+  useEffect(() => {
+    const getUserData = async () => {
+      try {
+        const data = await fetchUserData(accessToken);
+        setUserData(data);
+      } catch (error) {
+        // Handle error appropriately
+      }
+    };
+
+    if (accessToken) {
+      getUserData();
+    }
+  }, [accessToken]);
+
+  if (!userData) {
+    return <div>Loading...</div>;
+  }
+
   return (
     <div>
-      <h2>{user.name}</h2>
-      <img src={user.picture.data.url} alt={user.name} />
+      <h1>{userData.name}</h1>
+      <p>ID: {userData.id}</p>
     </div>
   );
 };

@@ -4,22 +4,14 @@ import Insights from "./components/Insights";
 import Profile from "./components/Profile";
 import Pages from "./components/Pages";
 import { useState, useEffect } from "react";
-import loadFbSdk from "./util/loadFbSdk";
 
 function App() {
-  const [sdkLoaded, setSdkLoaded] = useState(false);
   const [user, setUser] = useState(null);
   const [accessToken, setAccessToken] = useState(null);
   const [pageId, setPageId] = useState(null);
 
-  useEffect(() => {
-    loadFbSdk().then(() => {
-      setSdkLoaded(true);
-    });
-  }, []);
-
   const responseFacebook = (response) => {
-    setUser(response);
+    setUser(response.profile);
     setAccessToken(response.accessToken);
   };
 
@@ -29,7 +21,7 @@ function App() {
         <Login responseFacebook={responseFacebook} />
       ) : (
         <div>
-          <Profile user={user} />
+          <Profile accessToken={accessToken} />
           <Pages accessToken={accessToken} setPageId={setPageId} />
           {pageId && <Insights pageId={pageId} accessToken={accessToken} />}
         </div>

@@ -10,7 +10,7 @@ const loadFbSdk = () => {
         appId: import.meta.env.VITE_FACEBOOK_APP_ID,
         cookie: true,
         xfbml: true,
-        version: "v15.0",
+        version: "v20.0",
       });
       resolve();
     };
