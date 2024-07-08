@@ -5,11 +5,12 @@ const Insights = ({ pageId, accessToken }) => {
   const [insights, setInsights] = useState({});
   const [since, setSince] = useState("2023-01-01");
   const [until, setUntil] = useState("2023-12-31");
+  console.log(pageId);
 
   useEffect(() => {
     const fetchInsights = async () => {
       const result = await axios.get(
-        `https://graph.facebook.com/${pageId}/insights?metric=page_fans,page_engaged_users,page_impressions,page_actions_post_reactions_total&since=${since}&until=${until}&period=total_over_range&access_token=${accessToken}`
+        `https://graph.facebook.com/v20.0/${pageId}/insights?metric=page_fans,page_engaged_users,page_impressions,page_actions_post_reactions_total&since=${since}&until=${until}&period=total_over_range&access_token=${accessToken}`
       );
       const data = result.data.data.reduce((acc, item) => {
         acc[item.name] = item.values[0].value;
