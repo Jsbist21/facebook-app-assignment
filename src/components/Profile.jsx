@@ -10,7 +10,7 @@ const Profile = ({ accessToken }) => {
         const data = await fetchUserData(accessToken);
         setUserData(data);
       } catch (error) {
-        // Handle error appropriately
+        throw new error();
       }
     };
 
@@ -22,11 +22,20 @@ const Profile = ({ accessToken }) => {
   if (!userData) {
     return <div>Loading...</div>;
   }
+  console.log(userData);
 
   return (
-    <div>
-      <h1>{userData.name}</h1>
-      <p>ID: {userData.id}</p>
+    <div className="max-w-md mx-auto bg-white rounded-xl shadow-md overflow-hidden md:max-w-2xl mt-4">
+      <div className="p-4 flex items-center">
+        <img
+          src={userData.picture?.data.url}
+          alt={userData.name}
+          className="rounded-full h-16 w-16 flex-shrink-0"
+        />
+        <div className="ml-4">
+          <h1 className="text-2xl font-bold">{userData.name}</h1>
+        </div>
+      </div>
     </div>
   );
 };
