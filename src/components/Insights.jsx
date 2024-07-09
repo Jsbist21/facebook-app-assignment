@@ -8,6 +8,8 @@ const Insights = ({ pageId, accessToken }) => {
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState(null);
 
+  console.log(since);
+
   useEffect(() => {
     const fetchInsights = async () => {
       setLoading(true);
@@ -18,7 +20,7 @@ const Insights = ({ pageId, accessToken }) => {
           {
             params: {
               metric:
-                "page_fans,page_engaged_users,page_impressions,page_reactions_by_type_total",
+                "page_follows,post_engaged_users,page_impressions,post_reactions_by_type_total",
               since,
               until,
               period: "day",
@@ -72,10 +74,10 @@ const Insights = ({ pageId, accessToken }) => {
       {error && <div style={{ color: "red" }}>{error}</div>}
       {!loading && !error && (
         <>
-          <div>Followers: {insights.page_fans}</div>
-          <div>Engagement: {insights.page_engaged_users}</div>
+          <div>Followers: {insights.page_follows}</div>
+          <div>Engagement: {insights.post_engaged_users}</div>
           <div>Impressions: {insights.page_impressions}</div>
-          <div>Reactions: {insights.page_reactions_by_type_total}</div>
+          <div>Reactions: {insights.post_reactions_by_type_total}</div>
         </>
       )}
     </div>
