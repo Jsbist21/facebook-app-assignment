@@ -14,14 +14,14 @@ const Insights = ({ pageId, accessToken }) => {
       setError(null);
       try {
         const result = await axios.get(
-          `https://graph.facebook.com/v20.0/${pageId}/insights`,
+          `https://graph.facebook.com/${pageId}/insights`,
           {
             params: {
               metric:
-                "page_fans,page_engaged_users,page_impressions,page_actions_post_reactions_total",
+                "page_fans,page_engaged_users,page_impressions,page_reactions_by_type_total",
               since,
               until,
-              period: "total_over_range",
+              period: "day",
               access_token: accessToken,
             },
           }
@@ -35,7 +35,10 @@ const Insights = ({ pageId, accessToken }) => {
         console.log(data);
         setInsights(data);
       } catch (error) {
-        console.error(error);
+        console.error(
+          "Error fetching insights:",
+          error.response?.data || error.message
+        );
         setError("Failed to fetch insights. Please try again later.");
       } finally {
         setLoading(false);
@@ -72,7 +75,7 @@ const Insights = ({ pageId, accessToken }) => {
           <div>Followers: {insights.page_fans}</div>
           <div>Engagement: {insights.page_engaged_users}</div>
           <div>Impressions: {insights.page_impressions}</div>
-          <div>Reactions: {insights.page_actions_post_reactions_total}</div>
+          <div>Reactions: {insights.page_reactions_by_type_total}</div>
         </>
       )}
     </div>
